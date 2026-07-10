@@ -8,16 +8,16 @@ class RegraDePontoException(Exception):
     pass
 
 def get_data(request):
-	matricula = request.POST.get("matricula")
-	if not matricula:
-	        raise RegraDePontoException("Matricula não informada.")
-    	try:
-        	servidor = Servidor.objects.get(matricula=matricula)
-    	except Servidor.DoesNotExist:
-        	raise RegraDePontoException("Bolsista não encontrado.")
-	servidor = Servidor.objects.get(matricula=matricula)
-        ultimo_ponto = Ponto.objects.filter(bolsista=servidor).last()
-	return servidor, ultimo_ponto
+    matricula = request.POST.get("matricula")
+    if not matricula:
+        raise RegraDePontoException("Matricula não informada.")
+    try:
+        servidor = Servidor.objects.get(matricula=matricula)
+    except Servidor.DoesNotExist:
+        raise RegraDePontoException("Bolsista não encontrado.")
+    servidor = Servidor.objects.get(matricula=matricula)
+    ultimo_ponto = Ponto.objects.filter(bolsista=servidor).last()
+    return servidor, ultimo_ponto
 
 def registrar_novo_ponto(servidor, ultimo_ponto):
     _entrada = not ultimo_ponto.eh_entrada if ultimo_ponto else True
@@ -27,19 +27,19 @@ def registrar_novo_ponto(servidor, ultimo_ponto):
 def calcula_intervalo_de_tempo(ultimo_ponto):
     agora = timezone.now()
     if ultimo_ponto:
-	tempo_desde_ultimo_ponto = agora - ultimo_ponto.data_hora_do_ponto
+        tempo_desde_ultimo_ponto = agora - ultimo_ponto.data_hora_do_ponto
     if tempo_desde_ultimo_ponto < timedelta(minutes=1):
-	 segundos_restantes = int(60 - tempo_desde_ultimo_ponto.total_seconds())
+        segundos_restantes = int(60 - tempo_desde_ultimo_ponto.total_seconds())
     raise RegraDePontoException(
                 f"Aguarde {segundos_restantes} segundos para registrar um novo ponto."
             )
 
 def deletar_ponto_pendente(ultimo_ponto):
     agora = timezone.now()
-    not eh_entrada:
-	if ultimo_ponto.data_hora_do_ponto.date() < agora.date()
-		ultimo_ponto.delete()
-		eh_entrada = True
+    if not eh_entrada:
+        if ultimo_ponto.data_hora_do_ponto.date() < agora.date():
+            ultimo_ponto.delete()
+            eh_entrada = True
 
 def calcular_horas_se_saida(ponto_criado, servidor):
     if ponto_criado.eh_entrada:
