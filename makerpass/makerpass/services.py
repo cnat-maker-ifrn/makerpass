@@ -9,6 +9,8 @@ class RegraDePontoException(Exception):
 
 def get_data(request):
     matricula = request.POST.get("matricula")
+    print(f"Matricula: {matricula}")
+    print(f"Request: {request}")
     if not matricula:
         raise RegraDePontoException("Matricula não informada.")
     try:
@@ -17,11 +19,12 @@ def get_data(request):
         raise RegraDePontoException("Bolsista não encontrado.")
     servidor = Servidor.objects.get(matricula=matricula)
     ultimo_ponto = Ponto.objects.filter(bolsista=servidor).last()
+    print(f"Servidor: {servidor} --- Ultimo ponto: {ultimo_ponto}")
     return servidor, ultimo_ponto
 
 def registrar_novo_ponto(servidor, ultimo_ponto):
     _entrada = not ultimo_ponto.eh_entrada if ultimo_ponto else True
-    ponto_criado = Ponto.objects.create(bolsista=servidor, eh_entrada=eh_entrada)
+    ponto_criado = Ponto.objects.create(bolsista=servidor, eh_entrada=_entrada)
     return ponto_criado
 
 def calcula_intervalo_de_tempo(ultimo_ponto):
@@ -30,9 +33,7 @@ def calcula_intervalo_de_tempo(ultimo_ponto):
         tempo_desde_ultimo_ponto = agora - ultimo_ponto.data_hora_do_ponto
     if tempo_desde_ultimo_ponto < timedelta(minutes=1):
         segundos_restantes = int(60 - tempo_desde_ultimo_ponto.total_seconds())
-    raise RegraDePontoException(
-                f"Aguarde {segundos_restantes} segundos para registrar um novo ponto."
-            )
+    return segundos_restantes
 
 def deletar_ponto_pendente(ultimo_ponto):
     agora = timezone.now()
