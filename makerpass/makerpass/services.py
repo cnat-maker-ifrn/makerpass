@@ -33,7 +33,7 @@ def calcula_intervalo_de_tempo(ultimo_ponto):
         tempo_desde_ultimo_ponto = agora - ultimo_ponto.data_hora_do_ponto
     if tempo_desde_ultimo_ponto < timedelta(minutes=1):
         segundos_restantes = int(60 - tempo_desde_ultimo_ponto.total_seconds())
-    return segundos_restantes
+        return segundos_restantes
 
 def deletar_ponto_pendente(ultimo_ponto):
     agora = timezone.now()

@@ -40,7 +40,6 @@ db.sqlite3
 db.sqlite3-journal
 media/
 media/servidores
-static/
 # Nota: Você quer subir os arquivos estáticos de desenvolvimento, 
 # mas geralmente ignora a pasta 'staticfiles' gerada pelo collectstatic em produção.
 staticfiles/

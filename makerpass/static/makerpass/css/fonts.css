@@ -1,0 +1,42 @@
+/* Documentação do arquivo: fonts.css */
+/* Este arquivo define as fontes personalizadas para o projeto, carregando-as localmente. */
+
+/* --- Fonte Inter - Peso 400 (Regular) --- */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Inter_18pt-Regular.ttf') format('truetype'); /* <-- NOME ATUALIZADO */
+}
+
+/* --- Fonte Inter - Peso 500 (Medium) --- */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/Inter_18pt-Medium.ttf') format('truetype'); /* <-- NOME ATUALIZADO */
+}
+
+/* --- Fonte Inter - Peso 600 (SemiBold) --- */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../fonts/Inter_18pt-SemiBold.ttf') format('truetype'); /* <-- NOME ATUALIZADO */
+}
+
+/* --- Fonte Inter - Peso 700 (Bold) --- */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/Inter_24pt-Bold.ttf') format('truetype'); /* <-- NOME ATUALIZADO */
+}
+
+/* --- Fonte Inter - Peso 800 (ExtraBold) --- */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  src: url('../fonts/Inter_24pt-ExtraBold.ttf') format('truetype'); /* <-- NOME ATUALIZADO */
+}

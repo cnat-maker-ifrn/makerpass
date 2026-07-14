@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
+from datetime import timedelta
 # App imports
 from autenticacao.models import Servidor
 from .models import Ponto
@@ -27,7 +28,10 @@ class PaginaRegistroPontoView(View):
         request.session.pop("horas_trabalhadas_dia", None)
         horas_trabalhadas = calcular_horas_se_saida(ponto_criado, servidor)
         segundos_restantes = calcula_intervalo_de_tempo(ultimo_ponto)
-        messages.error(request, segundos_restantes)
+        if segundos_restantes:
+            if timedelta(segundos_restantes) < timedelta(minutes=1):
+                messages.error(request, f"Aguarde {segundos_restantes} segundos para registrar um novo ponto.")
+                return redirect('pagina_registro_ponto')
         if horas_trabalhadas:
             request.session["horas_trabalhadas_dia"] = horas_trabalhadas
         return redirect("pagina_sucesso_ponto")
