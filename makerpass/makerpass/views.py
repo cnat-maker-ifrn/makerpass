@@ -24,14 +24,10 @@ class PaginaRegistroPontoView(View):
         return render(request, self.template_name)
     def post(self, request, **kwargs):
         servidor, ultimo_ponto = get_data(request)
+        calcula_intervalo_de_tempo(ultimo_ponto, request)
         ponto_criado = registrar_novo_ponto(servidor, ultimo_ponto)
         request.session.pop("horas_trabalhadas_dia", None)
         horas_trabalhadas = calcular_horas_se_saida(ponto_criado, servidor)
-        segundos_restantes = calcula_intervalo_de_tempo(ultimo_ponto)
-        if segundos_restantes:
-            if timedelta(segundos_restantes) < timedelta(minutes=1):
-                messages.error(request, f"Aguarde {segundos_restantes} segundos para registrar um novo ponto.")
-                return redirect('pagina_registro_ponto')
         if horas_trabalhadas:
             request.session["horas_trabalhadas_dia"] = horas_trabalhadas
         return redirect("pagina_sucesso_ponto")

@@ -1,4 +1,6 @@
 from datetime import timedelta, time, datetime
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.utils import timezone
 from autenticacao.models import Servidor
 from .models import Ponto
@@ -27,13 +29,14 @@ def registrar_novo_ponto(servidor, ultimo_ponto):
     ponto_criado = Ponto.objects.create(bolsista=servidor, eh_entrada=_entrada)
     return ponto_criado
 
-def calcula_intervalo_de_tempo(ultimo_ponto):
+def calcula_intervalo_de_tempo(ultimo_ponto, request):
     agora = timezone.now()
     if ultimo_ponto:
         tempo_desde_ultimo_ponto = agora - ultimo_ponto.data_hora_do_ponto
     if tempo_desde_ultimo_ponto < timedelta(minutes=1):
         segundos_restantes = int(60 - tempo_desde_ultimo_ponto.total_seconds())
-        return segundos_restantes
+        messages.error(request, f"Aguarde {segundos_restantes} segundos para registrar um novo ponto.")
+        return redirect('pagina_registro_ponto')
 
 def deletar_ponto_pendente(ultimo_ponto):
     agora = timezone.now()
