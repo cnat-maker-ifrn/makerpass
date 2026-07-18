@@ -8,7 +8,6 @@ from datetime import timedelta
 # App imports
 from autenticacao.models import Servidor
 from .models import Ponto
-from .utils import calcular_total_horas
 from .services import (
 	registrar_novo_ponto, 
 	calcular_horas_se_saida, 
@@ -24,7 +23,9 @@ class PaginaRegistroPontoView(View):
         return render(request, self.template_name)
     def post(self, request, **kwargs):
         servidor, ultimo_ponto = get_data(request)
-        calcula_intervalo_de_tempo(ultimo_ponto, request)
+        intervalo_entre_registros_de_ponto = calcula_intervalo_de_tempo(ultimo_ponto, request)
+        if intervalo_entre_registros_de_ponto:
+            return intervalo_entre_registros_de_ponto
         ponto_criado = registrar_novo_ponto(servidor, ultimo_ponto)
         request.session.pop("horas_trabalhadas_dia", None)
         horas_trabalhadas = calcular_horas_se_saida(ponto_criado, servidor)

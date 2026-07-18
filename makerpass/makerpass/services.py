@@ -37,6 +37,7 @@ def calcula_intervalo_de_tempo(ultimo_ponto, request):
         segundos_restantes = int(60 - tempo_desde_ultimo_ponto.total_seconds())
         messages.error(request, f"Aguarde {segundos_restantes} segundos para registrar um novo ponto.")
         return redirect('pagina_registro_ponto')
+    return None
 
 def deletar_ponto_pendente(ultimo_ponto):
     agora = timezone.now()
