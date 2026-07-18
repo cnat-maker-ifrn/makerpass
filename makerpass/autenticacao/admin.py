@@ -17,7 +17,6 @@ from reportlab.pdfgen import canvas
 
 # Local imports
 from makerpass.models import Ponto
-from makerpass.utils import calcular_total_horas
 from .models import Servidor, User, Visitante
 
 
