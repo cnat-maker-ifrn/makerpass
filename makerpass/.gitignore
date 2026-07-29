@@ -61,3 +61,4 @@ Thumbs.db
 # Ruff (Cache de linting)
 .ruff_cache/
 
+makerpass-key.json
