@@ -1,8 +1,15 @@
+#Libs p/ google drive API
+import os
+from django.conf import settings
+from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
+#Libs gerais
 from datetime import timedelta, time, datetime
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
 from typing import Iterable, Tuple
+#Makerpass imports
 from autenticacao.models import Servidor
 from .models import Ponto
 
@@ -79,3 +86,27 @@ def calcular_horas_se_saida(ponto_criado, servidor):
     ).order_by("data_hora_do_ponto")
     horas, minutos = calcular_total_horas(pontos_do_dia)
     return f"{horas}h {minutos}min"
+
+#GOOGLE DRIVE API
+
+SCOPES = ['https://www.googleapis.com/auth/drive']
+
+def get_drive_service():
+    creds_path = os.path.join(settings.BASE_DIR, 'makerpass-key.json')
+    creds = Credentials.from_service_account_file(creds_path, scopes=SCOPES)
+    service = build('drive', 'v3', credentials=creds)
+    return service
+
+def criar_diretorio_drive(nome_da_pasta, id_pasta_pai):
+    service = get_drive_service()
+    file_metadata = {
+        'name': nome_da_pasta,
+        'mimeType': 'application/vnd.google-apps.folder',
+        'parents': [id_pasta_pai]
+    }
+    pasta_criada = service.files().create(body=file_metadata, fields='id').execute()
+    id_nova_pasta = pasta_criada.get('id')
+    print(f"Pasta '{nome_da_pasta}' criada com sucesso! ID: {id_nova_pasta}")
+    return id_nova_pasta
+
+
